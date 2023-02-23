@@ -23,7 +23,7 @@ ending_close_times = {
 }
 
 
-def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
+def open_time(control_dist_km:float, brevet_dist_km:float, brevet_start_time:arrow.Arrow):
    """
    Args:
       control_dist_km:  number, control distance in kilometers
@@ -70,7 +70,7 @@ def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
       return brevet_start_time.shift(hours=trunc(shift_hours), minutes=shift_minutes)
 
 
-def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
+def close_time(control_dist_km:float, brevet_dist_km:float, brevet_start_time:arrow.Arrow):
    """
    Args:
       control_dist_km:  number, control distance in kilometers

@@ -60,7 +60,7 @@ def _calc_times():
     # and control distance is fixed to 200
     # You should get these from the webpage!
 
-    start_time_arrow = arrow.get(start_time, format='YYYY-MM-DDTHH:mm')
+    start_time_arrow = arrow.get(start_time, 'YYYY-MM-DDTHH:mm')
 
     open_time = acp_times.open_time(km, brevet_dist_km, start_time_arrow).format('YYYY-MM-DDTHH:mm')
     close_time = acp_times.close_time(km, brevet_dist_km, start_time_arrow).format('YYYY-MM-DDTHH:mm')
