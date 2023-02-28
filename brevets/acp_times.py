@@ -48,7 +48,7 @@ def open_time(control_dist_km:float, brevet_dist_km:float, brevet_start_time:arr
       # but the open time is the same as a checkpoint at the official length
       shift_hours = ending_open_times[brevet_dist_km]
       shift_minutes = round((shift_hours - trunc(shift_hours)) * 60)
-      return brevet_start_time.shift(hours=shift_hours, minutes=shift_minutes)
+      return brevet_start_time.shift(hours=trunc(shift_hours), minutes=shift_minutes)
 
    if control_dist_km == 0:
       # the starting point opens at the starting time
@@ -58,7 +58,7 @@ def open_time(control_dist_km:float, brevet_dist_km:float, brevet_start_time:arr
       # checkpoint open times between 0 and 200km are calc with max speed 34
       shift_hours = control_dist_km / 34
       shift_minutes = round((shift_hours - trunc(shift_hours)) * 60)
-      return brevet_start_time.shift(hours=shift_hours, minutes=shift_minutes)
+      return brevet_start_time.shift(hours=trunc(shift_hours), minutes=shift_minutes)
 
    if 200 < control_dist_km <= 400:
       # checkpoint open times between 200 and 400km are calc with max speed 32
