@@ -6,6 +6,8 @@ Write your tests HERE AND ONLY HERE.
 import collections
 import sys
 
+# python 3.10 moves collections.Callable to collections.abc.Callable, 
+# this fixes the issue. So it can be tested properly
 if sys.version_info.minor >= 10:
     collections.Callable = collections.abc.Callable
 
