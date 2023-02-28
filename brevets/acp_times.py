@@ -22,6 +22,14 @@ ending_close_times = {
    1000: 75
 }
 
+ending_open_times = {
+   200: (200 / 34),
+   300: (200 / 34) + (100 / 32),
+   400: (200 / 34) + (200 / 32),
+   600: (200 / 34) + (200 / 32) + (200 / 30),
+   1000:(200 / 34) + (200 / 32) + (200 / 30) + (400 / 28)
+}
+
 
 def open_time(control_dist_km:float, brevet_dist_km:float, brevet_start_time:arrow.Arrow):
    """
@@ -35,6 +43,13 @@ def open_time(control_dist_km:float, brevet_dist_km:float, brevet_start_time:arr
       An arrow object indicating the control open time.
       This will be in the same time zone as the brevet start time.
    """
+   if brevet_dist_km <= control_dist_km <= (brevet_dist_km*1.2):
+      # The finish line can be up to 20% after the official length,
+      # but the open time is the same as a checkpoint at the official length
+      shift_hours = ending_open_times[brevet_dist_km]
+      shift_minutes = round((shift_hours - trunc(shift_hours)) * 60)
+      return brevet_start_time.shift(hours=shift_hours, minutes=shift_minutes)
+
    if control_dist_km == 0:
       # the starting point opens at the starting time
       return brevet_start_time
@@ -63,9 +78,9 @@ def open_time(control_dist_km:float, brevet_dist_km:float, brevet_start_time:arr
       shift_minutes = round((shift_hours - trunc(shift_hours)) * 60)
       return brevet_start_time.shift(hours=trunc(shift_hours), minutes=shift_minutes)
 
-   if 1000 < control_dist_km <= 1300:
-      # checkpoint open times bwteen 1k and 1300km are calc with max speed 26
-      shift_hours = (200 / 34) + (200 / 32) + (200 / 30) + (400 / 28) + ((control_dist_km - 1000) / 26)
+   if 1000 < control_dist_km:
+      # checkpoint open times above 1000km are equal to the open time of a checkpoint at 1000km
+      shift_hours = (200 / 34) + (200 / 32) + (200 / 30) + (400 / 28)
       shift_minutes = round((shift_hours - trunc(shift_hours)) * 60)
       return brevet_start_time.shift(hours=trunc(shift_hours), minutes=shift_minutes)
 
@@ -89,12 +104,13 @@ def close_time(control_dist_km:float, brevet_dist_km:float, brevet_start_time:ar
       shift_minutes = round((shift_hours - trunc(shift_hours)) * 60)
       return brevet_start_time.shift(hours=trunc(shift_hours), minutes=shift_minutes)
 
-   if control_dist_km == brevet_dist_km:
+   if brevet_dist_km <= control_dist_km <= (brevet_dist_km*1.2):
       # if the checkpoint is the finish line, the closing time is
       # hardcoded in ending_close_times.
+      # finish line can be up to 20% past the official length of the brevet.
 
       # shift brevet_start_time by ending_close_times[control_dist_km]
-      shift_hours = ending_close_times[control_dist_km]
+      shift_hours = ending_close_times[brevet_dist_km]
       shift_minutes = round((shift_hours - trunc(shift_hours)) * 60)
       return brevet_start_time.shift(hours=trunc(shift_hours), minutes=shift_minutes)
 
@@ -112,8 +128,8 @@ def close_time(control_dist_km:float, brevet_dist_km:float, brevet_start_time:ar
          shift_minutes = round((shift_hours - trunc(shift_hours)) * 60)
          return brevet_start_time.shift(hours=trunc(shift_hours), minutes=shift_minutes)
 
-      if 1000 < control_dist_km <= 1300:
-         # close times above 1000km are calculated with min speed 13.333
-         shift_hours = (600 / 15) + (400 / 11.428) + ((control_dist_km - 1000) / 13.333)
+      if 1000 < control_dist_km:
+         # close times above 1000km are equal to the close time at 1000km
+         shift_hours = ending_close_times[1000]
          shift_minutes = round((shift_hours - trunc(shift_hours)) * 60)
          return brevet_start_time.shift(hours=trunc(shift_hours), minutes=shift_minutes)
